@@ -29,4 +29,4 @@ dist-ssr
 /playwright-report/
 /playwright/.cache/
 #For my supabase info
-./.env
+.env
