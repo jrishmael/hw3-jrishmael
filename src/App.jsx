@@ -22,9 +22,13 @@ function App() {
       setSession(session)
 
       //given in hw3 notes
+      //fetch data
       const {data, error} = await supabase.from("service_request").select().eq('accept_reject', false) //grab not completed requests
       let newRequestsData = []
+      // structure the new data
+      // Please note the mapping from the service_request table and the requests object. sdescription is mapped to short_desc from table, etc
       data.forEach((item) => newRequestsData.push({ name: item.name, sdescription: item.short_desc, ldescription: item.long_desc, id: item.id, email: item.email, isCompleted: item.accept_reject }))
+      // set the new state
       setRequests(newRequestsData)
     })
 
@@ -37,7 +41,7 @@ function App() {
   // For example , if any of the service request is completed then this should invoke this realtime API which inturn should update the list of requests
   useEffect(() => {
     // code given in hw details, and .on.subscribe from supabase API docs
-
+    //using realtime API, service request list is same for everyone
     supabase
     .channel('*')
     .on('postgres_changes', { event: '*', schema: '*' }, async payload => {
@@ -50,8 +54,8 @@ function App() {
   const addRequest = async (element) => {
     //let request_id = 1 //thought i had to track id for table
     console.log(element)
-    console.log(session)
-    console.log(session.user)
+    //console.log(session)
+    //console.log(session.user)
     //element.name, sdescription, email, ldescription
     //for supabase...add uid(session.id), ID, accept-reject = false, created @ time
     const newRequests = [...requests, element];
@@ -78,7 +82,7 @@ function App() {
     const { data, error } = await supabase
   .from('service_request')
   .update({ accept_reject: true })
-  .eq('id', serviceId)
+  .eq('id', serviceId) //change based on correct id
     newRequests[index].isCompleted = true;
     setRequests(newRequests);
   };
@@ -90,7 +94,7 @@ function App() {
     const { data, error } = await supabase
       .from('service_request')
       .delete()
-      .eq('id', serviceId)
+      .eq('id', serviceId) //change based on correct id
     // If this API call succeeds remove the element from the list of requests with setRequests  
     newRequests.splice(index, 1);
     setRequests(newRequests);
