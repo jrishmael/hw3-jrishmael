@@ -22,16 +22,25 @@ function App() {
       setSession(session)
 
       //given in hw3 notes
-      //fetch data
       const {data, error} = await supabase.from("service_request").select().eq('accept_reject', false) //grab not completed requests
       let newRequestsData = []
       // structure the new data
       // Please note the mapping from the service_request table and the requests object. sdescription is mapped to short_desc from table, etc
-      data.forEach((item) => newRequestsData.push({ name: item.name, sdescription: item.short_desc, ldescription: item.long_desc, id: item.id, email: item.email, isCompleted: item.accept_reject }))
+      data.forEach((item) => newRequestsData.push({ name: item.name, sdescription: item.short_desc, ldescription: item.long_desc, id: item.id, email: item.email, isCompleted: item.accept_reject })) 
+      // for (const item in data){
+      //   newRequestsData.push({ name: item.name, sdescription: item.short_desc, ldescription: item.long_desc, id: item.id, email: item.email, isCompleted: item.accept_reject })
+      // }
       // set the new state
       setRequests(newRequestsData)
     })
-
+    //const fetchData = async() =>{
+        //const {data, error} = await supabase.from("service_request").select().eq('accept_reject', false) //grab not completed requests
+      // let newRequestsData = []
+      // // structure the new data
+      // // Please note the mapping from the service_request table and the requests object. sdescription is mapped to short_desc from table, etc
+      // data.forEach((item) => newRequestsData.push({ name: item.name, sdescription: item.short_desc, ldescription: item.long_desc, id: item.id, email: item.email, isCompleted: item.accept_reject }))
+      // // set the new state
+      // setRequests(newRequestsData)
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
@@ -48,6 +57,9 @@ function App() {
       const {data, error} = await supabase.from("service_request").select().eq('accept_reject', false) 
       let newRequestsData = []
       data.forEach((item) => newRequestsData.push({ name: item.name, sdescription: item.short_desc, ldescription: item.long_desc, id: item.id, email: item.email, isCompleted: item.accept_reject }))
+      // for (const item in data){
+      //   newRequestsData.push({ name: item.name, sdescription: item.short_desc, ldescription: item.long_desc, id: item.id, email: item.email, isCompleted: item.accept_reject })
+      // }
       setRequests(newRequestsData)
     }).subscribe()
     })
@@ -94,7 +106,7 @@ function App() {
     const { data, error } = await supabase
       .from('service_request')
       .delete()
-      .eq('id', serviceId) //change based on correct id
+      .eq('id', serviceId) //change based on  matching id, supabase handles admin
     // If this API call succeeds remove the element from the list of requests with setRequests  
     newRequests.splice(index, 1);
     setRequests(newRequests);
